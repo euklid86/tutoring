@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<!--
+	Multiverse by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Home tutors</title>
+		<meta charset="utf-8" />
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/bootstrap.css" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+	</head>
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+				<header id="header">
+					<nav style="left: 0px;">
+				<ul>
+					<li style="vertical-align:top;"><a href="index.html">Home tutors</a></li>
+					<div class="dropdown">
+								<li><div class="dropbtn" style="line-height:70%;">CATEGORIES</div>
+									<div class="dropdown-content">
+										<a href="math.html" style="color:black;">Math</a>
+										<a href="physics.html" style="color:black;">Physics</a>
+										<a href="chemistry.html" style="color:black;">Chemistry</a>
+										<a href="history.html" style="color:black;">History</a>
+										<a href="programming.html" style="color:black;">Programming</a>
+										<a href="biology.html" style="color:black;">Biology</a>
+										<a href="languages.html" style="color:black;">Languages</a>
+									</div>
+								</div>
+					</li>
+					<li style="vertical-align:top;"><a href="create.html">Create your Ad</a></li>
+					<li style="vertical-align:top;"><a href="#footer" class="icon fa-info-circle">About</a></li>
+		 </ul>
+				</nav>
+				</header>
+		</div>
+				<!-- Main -->
+				<br>
+				<br>
+				<div style="padding-left: 2%;padding-right: 5%;">
+					<div style="display:inline-block;width:20%;vertical-align:top;position: fixed;">
+						<h1 style="margin-bottom: 0px; padding-left: 15px;">Options</h1>
+						<br>
+						<div class="panel-active-body">
+						<div class ="panel-active">
+						<div class ="panel-active-heading"><h2>Location</h2></div>
+						<div class ="panel-active-body">
+						<form id="locations">
+							<h3><input type="radio" name="location" value="west">&nbsp West Sector</h3>
+							<h3><input type="radio" name="location" value="north">&nbsp North Sector</h3>
+							<h3><input type="radio" name="location" value="south">&nbsp South Sector</h3>
+							<h3><input type="radio" name="location" value="east">&nbsp East sector</h3>
+						</form>
+					</div>
+					</div>
+						<br>
+
+						<div class ="panel-active" style="width:80%;display:none;">
+						<div class ="panel-active-heading"><h2>Professions</h2></div>
+						<div class ="panel-active-body">
+						<form id="professions">
+							<input type="radio" name="profession" value="math"> Math <br />
+							<input type="radio" name="profession" value="physics"> Physics <br />
+							<input type="radio" name="profession" value="chemistry"> Chemistry <br />
+							<input type="radio" name="profession" value="history"> History
+						</form>
+					</div>
+					</div>
+				</div>
+			</div>
+
+
+				<div style="padding-left:35%;">
+					<h1 style="margin-bottom: 0px; padding-left: 15px;">Results</h1>
+					<br>
+					<div id="test" class = "panel-active-body">
+					</div>
+				</div>
+			</div>
+
+				<script>
+				var myjson;
+				$(document).ready(function(){
+				$.getJSON("/professor/all", function(json){
+					myjson = json;
+					var counter=0;
+					for (var i = 0, len = json.length; i < len; i++){
+						if (myjson[i].profession == "english"){
+							counter++;
+							document.getElementById("test").innerHTML += "<div class ="+"panel-active"+">"+"<div class ="+"panel-active-heading"+"><h2>"+myjson[i].profession+"</h2></div>"+"<div class ="+"panel-active-body"+">"+"<h3>Name: "+myjson[i].fname+"<br>"+"Last Name: "+myjson[i].lname+"<br>"+"Location: "+myjson[i].location+"<br>"+"E-mail: "+myjson[i].email+"<br>"+"Phone: "+myjson[i].phone+"</h3><div id="+myjson[i].prid+"><h3>Ads:</h3></div></div>"+"</div><br>";
+								var length = myjson[i].profAds.length;
+								if (length > 0){
+								for (var j = 0; j < length; j++){
+									document.getElementById(myjson[i].prid).innerHTML +="<li>" +myjson[i].profAds[j].information+"<br><a href="+"review.html"+" id="+"review"+"> Review</a></li>";
+								}}}}
+			if (counter==0)
+				document.getElementById("test").innerHTML = "<h1>NO RESULTS FOUND</h1>";
+		});
+			});
+			$('#locations input').on('change', function() {
+					var mylocation = $('input[name="location"]:checked', '#locations').val();
+					var myprofession="english";
+					if ($('input[name="profession"]:checked', '#professions').val()){
+						myprofession = $('input[name="profession"]:checked', '#professions').val();
+					}
+
+					document.getElementById("test").innerHTML = "";
+					$.getJSON("/professor/all", function(json){
+						myjson = json;
+						var counter=0;
+						for (var i = 0, len = json.length; i < len; i++){
+							if (myjson[i].location == mylocation){
+								if (myprofession){
+									if (myjson[i].profession == myprofession){
+										counter++;
+										document.getElementById("test").innerHTML += "<div class ="+"panel-active"+">"+"<div class ="+"panel-active-heading"+"><h2>"+myjson[i].profession+"</h2></div>"+"<div class ="+"panel-active-body"+">"+"<h3>Name: "+myjson[i].fname+"<br>"+"Last Name: "+myjson[i].lname+"<br>"+"Location: "+myjson[i].location+"<br>"+"E-mail: "+myjson[i].email+"<br>"+"Phone: "+myjson[i].phone+"</h3><div id="+myjson[i].prid+"><h3>Ads:</h3></div></div>"+"</div><br>";
+											var length = myjson[i].profAds.length;
+											if (length > 0){
+											for (var j = 0; j < length; j++){
+												document.getElementById(myjson[i].prid).innerHTML +="<li>" +myjson[i].profAds[j].information+"<br><a href="+"review.html"+" id="+"review"+"> Review</a></li>";
+												}}}
+									}else{
+										counter++;
+										document.getElementById("test").innerHTML += "<div class ="+"panel-active"+">"+"<div class ="+"panel-active-heading"+"><h2>"+myjson[i].profession+"</h2></div>"+"<div class ="+"panel-active-body"+">"+"<h3>Name: "+myjson[i].fname+"<br>"+"Last Name: "+myjson[i].lname+"<br>"+"Location: "+myjson[i].location+"<br>"+"E-mail: "+myjson[i].email+"<br>"+"Phone: "+myjson[i].phone+"</h3><div id="+myjson[i].prid+"><h3>Ads:</h3></div></div>"+"</div><br>";
+											var length = myjson[i].profAds.length;
+											if (length > 0){
+											for (var j = 0; j < length; j++){
+												document.getElementById(myjson[i].prid).innerHTML +="<li>" +myjson[i].profAds[j].information+"<br><a href="+"review.html"+" id="+"review"+"> Review</a></li>";
+												}}}
+									}
+								}
+								if (counter==0)
+									document.getElementById("test").innerHTML = "<h1>NO RESULTS FOUND</h1>";
+					});
+					});
+
+					$('#professions input').on('change', function() {
+							var myprofession = $('input[name="profession"]:checked', '#professions').val();
+							var mylocation;
+							if ($('input[name="location"]:checked', '#locations').val()){
+								mylocation = $('input[name="location"]:checked', '#locations').val();
+							}
+							document.getElementById("test").innerHTML = "";
+							$.getJSON("/professor/all", function(json){
+								myjson = json;
+								var counter=0;
+								for (var i = 0, len = json.length; i < len; i++){
+									if (myjson[i].profession == myprofession){
+										if (mylocation){
+											if (myjson[i].location == mylocation){
+												counter++;
+												document.getElementById("test").innerHTML += "<div class ="+"panel-active"+">"+"<div class ="+"panel-active-heading"+"><h2>"+myjson[i].profession+"</h2></div>"+"<div class ="+"panel-active-body"+">"+"<h3>Name: "+myjson[i].fname+"<br>"+"Last Name: "+myjson[i].lname+"<br>"+"Location: "+myjson[i].location+"<br>"+"E-mail: "+myjson[i].email+"<br>"+"Phone: "+myjson[i].phone+"</h3><div id="+myjson[i].prid+"><h3>Ads:</h3></div></div>"+"</div><br>";
+													var length = myjson[i].profAds.length;
+													if (length > 0){
+													for (var j = 0; j < length; j++){
+														document.getElementById(myjson[i].prid).innerHTML +="<li>" +myjson[i].profAds[j].information+"<br><a href="+"review.html"+" id="+"review"+"> Review</a></li>";
+														}}}
+											}else{
+												counter++;
+												document.getElementById("test").innerHTML += "<div class ="+"panel-active"+">"+"<div class ="+"panel-active-heading"+"><h2>"+myjson[i].profession+"</h2></div>"+"<div class ="+"panel-active-body"+">"+"<h3>Name: "+myjson[i].fname+"<br>"+"Last Name: "+myjson[i].lname+"<br>"+"Location: "+myjson[i].location+"<br>"+"E-mail: "+myjson[i].email+"<br>"+"Phone: "+myjson[i].phone+"</h3><div id="+myjson[i].prid+"><h3>Ads:</h3></div></div>"+"</div><br>";
+													var length = myjson[i].profAds.length;
+													if (length > 0){
+													for (var j = 0; j < length; j++){
+														document.getElementById(myjson[i].prid).innerHTML +="<li>" +myjson[i].profAds[j].information+"<br><a href="+"review.html"+" id="+"review"+"> Review</a></li>";
+														}}}
+											}
+										}
+										if (counter==0)
+											document.getElementById("test").innerHTML = "<h1>NO RESULTS FOUND</h1>";
+							});
+							});
+
+				</script>
+				<!-- Footer -->
+				<footer id="footer" class="panel">
+					<div class="inner split">
+						<div style="width:100%">
+								<h2>Home tuttors</h2>
+									<p>
+										An online platform for tutors to get advertised and for students to search what is the appropriate ad for them!
+									</p>
+
+							<p class="copyright"> &copy; Theodoropoulos Dimitris, Michailidis Euklides.
+							</p>
+						</div>
+					</div>
+				</footer>
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.poptrox.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

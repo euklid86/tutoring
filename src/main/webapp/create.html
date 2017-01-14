@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<!--
+	Multiverse by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+<title>Home tutors</title>
+<meta charset="utf-8" />
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+<link rel="stylesheet" href="assets/css/main.css" />
+<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+</head>
+<body>
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<nav style="left: 0px;">
+		<ul>
+			<li style="vertical-align:top;"><a href="index.html">Home tutors</a></li>
+			<div class="dropdown">
+						<li><div class="dropbtn" style="line-height:70%;">CATEGORIES</div>
+							<div class="dropdown-content">
+								<a href="math.html" style="color:black;">Math</a>
+								<a href="physics.html" style="color:black;">Physics</a>
+								<a href="chemistry.html" style="color:black;">Chemistry</a>
+								<a href="history.html" style="color:black;">History</a>
+								<a href="programming.html" style="color:black;">Programming</a>
+								<a href="biology.html" style="color:black;">Biology</a>
+								<a href="languages.html" style="color:black;">Languages</a>
+							</div>
+						</div>
+			</li>
+			<li style="vertical-align:top;"><a href="create.html">Create your Ad</a></li>
+			<li style="vertical-align:top;"><a href="#footer" class="icon fa-info-circle">About</a></li>
+ </ul>
+		</nav>
+		</header>
+</div>
+	<!-- Main -->
+	<br>
+	<div id="first" align="center"
+		style="padding-left: 20%; padding-right: 20%;">
+		<section>
+			<h2>Already registered?</h2>
+			<form id="createAd" method="post" action="profads/create">
+				<textarea name="information" id="information" rows="4"
+					placeholder="information" required="required"></textarea>
+				<br> <input type="text" name="secret" id="secret"
+					placeholder="Secret Code" required="required"/>
+					<p id="reviewResult" style="color:red;"></p>
+					<input type="text" name="review" id="reviewCode" placeholder="Review Code" required="required"/> <br>
+				<input type="submit" value="Submit" class="special" />
+			</form>
+			<p id="two">
+				Don't have account? <a class="signup" href="#" id="signup">Sign
+					up here</a>
+			</p>
+		</section>
+	</div>
+
+	<div id="second" align="center"
+		style="padding-left: 20%; padding-right: 20%; display: none;">
+		<section>
+			<h2>Register</h2>
+			<form id="createProf" method="post" action="/professor/create">
+				<input type="text" name="fname" id="fname" placeholder="First name" required="required"/><br>
+				<input type="text" name="lname" id="lname" placeholder="Last name" required="required"/> <br>
+				<select name="profession" id="profession" placeholder="Profession" required="required"/>
+					<option value="">Select Profession</option>
+					<option value="math">Math</option>
+					<option value="physics">Physics</option>
+					<option value="chemistry">Chemistry</option>
+					<option value="biology">Biology</option>
+					<option value="history">History</option>
+					<option value="programming">Programming</option>
+					<optgroup label="Languages">
+						<option value="english">English</option>
+						<option value="french">French</option>
+						<option value="italian">Italian</option>
+						<option value="spanish">Spanish</option>
+					</optgroup>
+				</select>
+				<br>
+				<select name="location" id="location" required="required"/>
+					<option value="">Select Location</option>
+					<option value="south">South Sector</option>
+					<option value="north">North Sector</option>
+					<option value="east">East Sector</option>
+					<option value="west">West Sector</option>
+				</select>
+				<br>
+				<input type="text" name="email" id="email" placeholder="E-mail" required="required"/> <br>
+				<input type="text" name="phone" id="phone" placeholder="Phone" required="required"/>
+				<p id="secretResult" style="color:red;"></p>
+				<input type="text" name="secretcode" id="secretcode" placeholder="Secret Code" required="required"/> <br>
+				<input type="submit" value="Submit" class="special" />
+			</form>
+			<p id="two">
+				Already have an account? <a class="signin" href="#" id="signin">Create
+					Your Ad!</a>
+			</p>
+		</section>
+	</div>
+
+
+	<script>
+	var myjson;
+	var inputs = document.querySelectorAll('input:not([type="submit"])');
+	$("#reviewCode").keyup( function(){
+	$.getJSON("/profads/all", function(json){
+		myjson = json;
+		reviewcode=$('input[name="review"]', '#createAd').val();
+		for (var i = 0, len = json.length; i < len; i++){
+			if (myjson[i].reviewCode == reviewcode){
+				document.getElementById("reviewResult").innerHTML="Review Code Invalid!";
+				$('input[type="submit"]').prop('disabled', true);
+				break;
+			}
+			if (myjson[i].reviewCode !== reviewcode){
+				document.getElementById("reviewResult").innerHTML="";
+					$('input[type="submit"]').prop('disabled', false);
+			}
+		}
+	});
+});
+
+$("#secretcode").keyup( function(){
+	$.getJSON("/professor/all", function(json){
+		myjson = json;
+		secretcode=$('input[name="secretcode"]', '#createProf').val();
+		for (var i = 0, len = json.length; i < len; i++){
+			if (myjson[i].secretCode == secretcode){
+				document.getElementById("secretResult").innerHTML="Secret Code Invalid!";
+				$('input[type="submit"]').prop('disabled', true);
+				break;
+			}
+			if (myjson[i].reviewCode !== secretcode){
+				document.getElementById("secretResult").innerHTML="";
+					$('input[type="submit"]').prop('disabled', false);
+			}
+		}
+
+	});
+});
+
+
+
+		$("#signup").click(function() {
+			$("#first").slideUp("slow", function() {
+				$("#second").slideDown("slow");
+			});
+		});
+		// On Click SignIn It Will Hide Registration Form and Display Login Form
+		$("#signin").click(function() {
+			$("#second").slideUp("slow", function() {
+				$("#first").slideDown("slow");
+			});
+		});
+
+		$(function() {
+			//var frm = $(document.myform);
+			//var dat = JSON.stringify(frm.serializeArray());
+
+			$('#createAd').submit(function(e) {
+				var dat = {
+					information : $('#information').val(),
+					secretCode : $('#secret').val(),
+					reviewCode : $('#reviewCode').val()
+				}
+				$.ajax({
+					datatype : "json",
+					contentType : "application/json; charset=utf-8",
+					type : "POST",
+					url : '/profads/create',
+					data : JSON.stringify(dat),
+					success : function() {
+						document.getElementById("first").innerHTML ="<h1>Well done!</h1>";
+					},
+					error : function() {
+						document.getElementById("first").innerHTML ="<h1>Oops something went wrong!</h1>";
+					},
+				});
+				// Stops browser refresh
+				e.preventDefault();
+			});
+		});
+
+		$(function() {
+			//var frm = $(document.myform);
+			//var dat = JSON.stringify(frm.serializeArray());
+
+			$('#createProf').submit(function(e) {
+				var dat = {
+					fname : $('#fname').val(),
+					lname : $('#lname').val(),
+					profession : $('#profession').val(),
+					location : $('#location').val(),
+					email : $('#email').val(),
+					phone : $('#phone').val(),
+					secretCode : $('#secretcode').val()
+				}
+				$.ajax({
+					datatype : "json",
+					contentType : "application/json; charset=utf-8",
+					type : "POST",
+					url : '/professor/create',
+					data : JSON.stringify(dat),
+					success : function() {
+						document.getElementById("second").innerHTML ="<h1>Well done!</h1>";
+					},
+					error : function() {
+						document.getElementById("second").innerHTML ="<h1>Oops something went wrong!</h1>";
+					},
+				});
+				// Stops browser refresh
+				e.preventDefault();
+			});
+		});
+	</script>
+
+
+
+
+
+
+
+	<!-- Footer -->
+	<footer id="footer" class="panel">
+		<div class="inner split">
+			<div style="width:100%">
+					<h2>Home tuttors</h2>
+						<p>
+							An online platform for tutors to get advertised and for students to search what is the appropriate ad for them!
+						</p>
+
+				<p class="copyright"> &copy; Theodoropoulos Dimitris, Michailidis Euklides.
+				</p>
+			</div>
+		</div>
+	</footer>
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.poptrox.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+	<script src="assets/js/main.js"></script>
+
+</body>
+</html>
